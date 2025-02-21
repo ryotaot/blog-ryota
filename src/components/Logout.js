@@ -8,7 +8,7 @@ const Logout = ({ setIsAuth }) => {
   const logout = () => {
     //ログアウト
     signOut(auth).then(() => {
-      localStorage.setItem("isAuth", false);
+      localStorage.clear();
       setIsAuth(false);
       navigate("/login");
     });

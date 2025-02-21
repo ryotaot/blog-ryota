@@ -8,6 +8,7 @@ const Login = ({ setIsAuth }) => {
   const loginWithGoogle = () => {
     //Googleでログイン
     signInWithPopup(auth, provider).then((result) => {
+      localStorage.setItem("isAuth", true);
       setIsAuth(true);
       navigate("/");
     });
