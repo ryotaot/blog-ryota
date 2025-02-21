@@ -10,14 +10,24 @@ import { useState } from "react";
 function App() {
   const [isAuth, setIsAuth] = useState(false);
 
+  const handleAuthChange = (newValue) => {
+    console.log("Auth changing to:", newValue);
+    setIsAuth(newValue);
+  };
+
   return (
     <Router>
-      <Navbar />
+      <nav>
+        <Navbar isAuth={isAuth} />
+      </nav>
       <Routes>
-        <Route path="/" element={<Home />}></Route>
-        <Route path="/createpost" element={<CreatePost />}></Route>
-        <Route path="/login" element={<Login setIsAuth={setIsAuth} />}></Route>
-        <Route path="/logout" element={<Logout />}></Route>
+        <Route path="/" element={<Home />} />
+        <Route path="/createpost" element={<CreatePost />} />
+        <Route path="/login" element={<Login setIsAuth={handleAuthChange} />} />
+        <Route
+          path="/logout"
+          element={<Logout setIsAuth={handleAuthChange} />}
+        />
       </Routes>
     </Router>
   );
