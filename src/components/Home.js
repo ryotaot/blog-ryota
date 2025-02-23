@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import "./Home.css";
-import { db } from "../firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { auth, db } from "../firebase";
 import { useState } from "react";
+import { collection, getDocs, deleteDoc, doc } from "firebase/firestore"; // deleteDocとdocを追加
 
 const Home = () => {
   const [postList, setPostList] = useState([]);
@@ -11,13 +11,16 @@ const Home = () => {
     const getPosts = async () => {
       const data = await getDocs(collection(db, "posts"));
       setPostList(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-      console.log(data);
-      console.log(data.docs);
-      console.log(data.docs.map((doc) => ({ doc })));
       console.log(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     };
     getPosts();
   }, []);
+
+  const handleDelete = async (id) => {
+    await deleteDoc(doc(db, "posts", id));
+    window.location.href = "/";
+  };
+
   return (
     <div className="homePage">
       {postList.map((post) => {
@@ -28,8 +31,10 @@ const Home = () => {
             </div>
             <div className="postTextContainer">{post.postText}</div>
             <div className="nameAndDeleteButton">
-              <h3>{post.author.username}</h3>
-              <button>削除</button>
+              <h3>@{post.author.username}</h3>
+              {post.author.id === auth.currentUser?.uid && (
+                <button onClick={() => handleDelete(post.id)}>削除</button>
+              )}
             </div>
           </div>
         );
